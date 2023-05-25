@@ -1,4 +1,5 @@
 package com.example.quickmathgame;
+
 import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,10 +26,9 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonOp4;
 
     private int level = 0;
-    private int great = 0;
     private int rightAnswer = 0;
     private String realOperation = "";
-
+    private int numCorrect = 0;
 
     private static final long TIMER_INTERVAL = 1000; // 1 second
     private CountDownTimer timer;
@@ -61,9 +61,8 @@ public class MainActivity extends AppCompatActivity {
         buttonOp3.setBackground(ContextCompat.getDrawable(this, R.drawable.button_selector));
         buttonOp4.setBackground(ContextCompat.getDrawable(this, R.drawable.button_selector));
 
-
-        textLevel.setText("QUESTION : " + level + " / 10");
-        textRightAnswered.setText("NUMCORRECT : " + great + " / 10");
+        textLevel.setText("QUESTION : " + (level) + " / 10");
+        textRightAnswered.setText("NUMCORRECT : " + rightAnswer + " / 10");
 
         if (level < 10) {
             getARandomQuestion();
@@ -83,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
                 // Perform actions when the timer is finished
                 // For example, switch to TimeUpActivity
                 Intent intent = new Intent(MainActivity.this, TimeUpActivity.class);
+                intent.putExtra("correctAnswers", rightAnswer);
+                intent.putExtra("totalQuestions", 10);
                 startActivity(intent);
                 finish();
             }
@@ -115,12 +116,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     private void handleAnswerSelection(Button selectedButton) {
         boolean isCorrect = selectedButton.getText().equals(String.valueOf(rightAnswer));
 
         if (isCorrect) {
             selectedButton.setBackgroundResource(R.drawable.right_answer_bg);
-            great++;
+            numCorrect++; // Increment numCorrect by 1
         } else {
             selectedButton.setBackgroundResource(R.drawable.wrong_answer_bg);
             timer.cancel();
@@ -128,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
         level++;
         textLevel.setText("QUESTION : " + level + " / 10");
-        textRightAnswered.setText("NUMCORRECT : " + great + " / 10");
+        textRightAnswered.setText("NUMCORRECT : " + numCorrect + " / " + (level));
 
 
         new Handler().postDelayed(new Runnable() {
@@ -139,12 +141,15 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     // Transition to TimeUpActivity
                     Intent intent = new Intent(MainActivity.this, TimeUpActivity.class);
+                    intent.putExtra("correctAnswers", rightAnswer);
+                    intent.putExtra("totalQuestions", level);
                     startActivity(intent);
                     finish();
                 }
             }
         }, 500);
     }
+
 
 
     private void getARandomQuestion() {
@@ -181,11 +186,11 @@ public class MainActivity extends AppCompatActivity {
         // Assign the correct answer to a random button
         Button[] buttons = {buttonOp1, buttonOp2, buttonOp3, buttonOp4};
         int correctButtonIndex = new Random().nextInt(4);
-        buttons[correctButtonIndex].setText(String.valueOf(options[0]));
+        buttons[correctButtonIndex].setText(String.valueOf(result));
         buttons[correctButtonIndex].setBackgroundResource(R.drawable.button_selector);
 
         // Assign the remaining options to the other buttons
-        int optionIndex = 1;
+        int optionIndex = 0;
         for (int i = 0; i < 4; i++) {
             if (i != correctButtonIndex) {
                 buttons[i].setText(String.valueOf(options[optionIndex]));
@@ -196,10 +201,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int[] generateOptions(int result) {
-        int[] options = new int[4];
-        options[0] = result;
+        int[] options = new int[3];
 
-        for (int i = 1; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             int option = result + new Random().nextInt(10) + 1;
 
             while (contains(options, option)) {

@@ -14,18 +14,12 @@
         android:text="Time's Up!"
         android:textSize="24sp"
         android:textStyle="bold" />
+
     <TextView
         android:id="@+id/correctAnswersTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Correct Answers: "
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/percentageTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Percentage Correct: "
         android:textSize="18sp" />
 
     <Button
@@ -35,9 +29,6 @@
         android:text="Try Again"
         android:onClick="tryAgainButtonClicked" />
 
-
-
     <!-- Add any additional views or messages you want to display -->
 
 </LinearLayout>
-

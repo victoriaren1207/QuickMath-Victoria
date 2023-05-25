@@ -1,4 +1,5 @@
 package com.example.quickmathgame;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -17,23 +18,19 @@ public class TimeUpActivity extends AppCompatActivity {
         // Retrieve values from intent
         Intent intent = getIntent();
         int correctAnswers = intent.getIntExtra("correctAnswers", 0);
-        int totalQuestions = intent.getIntExtra("totalQuestions", 0);
-        double percentage = ((double) correctAnswers / totalQuestions) * 100;
+        int totalQuestions = intent.getIntExtra("totalQuestions", 10);
 
         // Display values
         TextView correctAnswersTextView = findViewById(R.id.correctAnswersTextView);
-        correctAnswersTextView.setText("Correct Answers: " + correctAnswers);
-
-        TextView percentageTextView = findViewById(R.id.percentageTextView);
-        percentageTextView.setText("Percentage Correct: " + String.format("%.2f", percentage) + "%");
+        correctAnswersTextView.setText("Correct Answers: " + correctAnswers + " out of " + totalQuestions);
 
         // "Try Again" button click listener
         Button tryAgainButton = findViewById(R.id.tryAgainButton);
         tryAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Start the StartActivity
-                Intent intent = new Intent(TimeUpActivity.this, StartActivity.class);
+                // Start the MainActivity
+                Intent intent = new Intent(TimeUpActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish(); // Optional: Close the TimeUpActivity
             }
